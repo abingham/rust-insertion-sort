@@ -7,8 +7,8 @@ fn sort(xs: &mut Vec<i32>) {
         let current = xs[index];
 
         let back_index = xs[0..index].iter().enumerate().rev()
-            .find(|(_bi, &x)| current >= x)
-            .map_or(0, |(bi, &_x)| bi);
+            .find_map(|(bi, &x)| if current >= x { Some(bi) } else { None} )
+            .unwrap_or(0);
 
         // Can we remove this copy?
         let to_shift = Vec::from_iter(xs[back_index..index].iter().cloned());
