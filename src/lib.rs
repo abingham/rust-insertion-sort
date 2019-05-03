@@ -2,19 +2,21 @@ use std::iter::FromIterator;
 use std::iter::Iterator;
 
 pub fn sort(xs: &mut Vec<i32>) {
-    for index in 1..xs.len() {
-        let current = xs[index];
+    for current_index in 1..xs.len() {
+        let current = xs[current_index];
 
-        let back_index = xs[0..index]
+        match xs[0..current_index]
             .iter()
             .enumerate()
             .find_map(|(idx, &x)| if current < x { Some(idx) } else { None })
-            .unwrap_or(index);
-
-        // Can we remove this copy?
-        let to_shift = Vec::from_iter(xs[back_index..index].iter().cloned());
-        xs.splice(back_index + 1..index + 1, to_shift);
-        xs[back_index] = current;
+        {
+            Some(insertion_index) => {
+                let to_shift = Vec::from_iter(xs[insertion_index..current_index].iter().cloned());
+                xs.splice(insertion_index + 1..current_index + 1, to_shift);
+                xs[insertion_index] = current;
+            }
+            _ => {}
+        }
     }
 }
 
